@@ -6,6 +6,7 @@ This app replicates the paper-based score card system used for railway station c
 
 lib/
 ├── main.dart                 # Main app entry point
+|
 ├── models/
 │   └── score_card_data.dart  # Data models
 ├── providers/
