@@ -16,100 +16,112 @@ class PlatformReturnTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ScoreCardProvider>(
       builder: (context, provider, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.blue.shade50,
-                Colors.white,
-              ],
-            ),
-          ),
-          child: SingleChildScrollView(
-            padding: _getPadding(context),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.shade100,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.blue.shade50,
+                    Colors.white,
+                  ],
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: _getPadding(context),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.assignment_turned_in,
-                            color: Colors.blue.shade600,
-                            size: _getTitleFontSize(context),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header Section
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.shade100,
+                                blurRadius: 10,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 12),
-                          Text(
-                            'Platform Return Activities',
-                            style: TextStyle(
-                              fontSize: _getTitleFontSize(context),
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade800,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.blue.shade200),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.blue.shade600,
-                              size: 16,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Maximum marks: 15 | Rating calculation: 12/15 × 100 = 80%',
-                                style: TextStyle(
-                                  fontSize: _getNoteFontSize(context),
-                                  color: Colors.blue.shade700,
-                                  fontWeight: FontWeight.w500,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.assignment_turned_in,
+                                    color: Colors.blue.shade600,
+                                    size: _getTitleFontSize(context),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Platform Return Activities',
+                                    style: TextStyle(
+                                      fontSize: _getTitleFontSize(context),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                              Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade50,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.blue.shade200),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline,
+                                      color: Colors.blue.shade600,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        'Maximum marks: 15 | Rating calculation: 12/15 × 100 = 80%',
+                                        style: TextStyle(
+                                          fontSize: _getNoteFontSize(context),
+                                          color: Colors.blue.shade700,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: _getSpacing(context)),
+                        // Main Content
+                        _buildPlatformGrid(provider, context),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: _getSpacing(context)),
-                // Main Content
-                _buildPlatformGrid(provider, context),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
+
 
   // Media query helper methods
   EdgeInsets _getPadding(BuildContext context) {

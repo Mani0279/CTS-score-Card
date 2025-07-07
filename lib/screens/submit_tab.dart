@@ -8,94 +8,75 @@ class SubmitTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ScoreCardProvider>(
       builder: (context, provider, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.blue.shade50,
-                Colors.white,
-              ],
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.blue.shade50,
+                  Colors.white,
+                ],
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade700,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.shade200,
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  padding: EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.assignment_turned_in,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            'Review & Submit',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Please review all information before submitting',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.blue.shade100,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 24),
-
-                // Summary Card
-                _buildSummaryCard(context, provider),
-
-                SizedBox(height: 20),
-
-                // Clean Train Activities Summary
-                _buildCleanTrainSummaryCard(context, provider),
-
-                SizedBox(height: 20),
-
-                // Platform Return Activities Summary
-                _buildPlatformReturnSummaryCard(context, provider),
-
-                SizedBox(height: 30),
-
-                // Action Buttons
-                _buildActionButtons(context, provider),
-              ],
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  SizedBox(height: 24),
+                  _buildSummaryCard(context, provider),
+                  SizedBox(height: 20),
+                  _buildCleanTrainSummaryCard(context, provider),
+                  SizedBox(height: 20),
+                  _buildPlatformReturnSummaryCard(context, provider),
+                  SizedBox(height: 30),
+                  _buildActionButtons(context, provider),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.blue.shade700,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.shade200,
+            blurRadius: 10,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.assignment_turned_in, color: Colors.white, size: 28),
+              SizedBox(width: 12),
+              Text(
+                'Review & Submit',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Please review all information before submitting',
+            style: TextStyle(fontSize: 14, color: Colors.blue.shade100),
+          ),
+        ],
+      ),
     );
   }
 
@@ -396,17 +377,24 @@ class SubmitTab extends StatelessWidget {
   }
 
   Widget _buildInfoGrid(List<Widget> items) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
-      itemCount: items.length,
-      itemBuilder: (context, index) => items[index],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSmallScreen = screenWidth < 360;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: isSmallScreen ? 2.2 : 2.8,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          ),
+          itemCount: items.length,
+          itemBuilder: (context, index) => items[index],
+        );
+      },
     );
   }
 
@@ -420,7 +408,6 @@ class SubmitTab extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             label,
@@ -431,14 +418,18 @@ class SubmitTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 2),
-          Text(
-            value.isEmpty ? 'N/A' : value,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue.shade800,
+          Flexible(
+            child: Text(
+              value.isEmpty ? 'N/A' : value,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade800,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              softWrap: true,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

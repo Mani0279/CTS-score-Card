@@ -8,33 +8,44 @@ class CleanTrainTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ScoreCardProvider>(
       builder: (context, provider, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.blue.shade50,
-                Colors.white,
-              ],
-            ),
-          ),
-          child: SingleChildScrollView(
-            padding: _getPadding(context),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(context),
-                SizedBox(height: _getSpacing(context)),
-                _buildActivityDescription(context),
-                SizedBox(height: _getSpacing(context)),
-                _buildScoringGrid(provider, context),
-                SizedBox(height: _getSpacing(context)),
-                _buildScoreCard(provider, context),
-                SizedBox(height: 20),
-              ],
-            ),
-          ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.blue.shade50,
+                    Colors.white,
+                  ],
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: _getPadding(context),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(context),
+                        SizedBox(height: _getSpacing(context)),
+                        _buildActivityDescription(context),
+                        SizedBox(height: _getSpacing(context)),
+                        _buildScoringGrid(provider, context),
+                        SizedBox(height: _getSpacing(context)),
+                        _buildScoreCard(provider, context),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
